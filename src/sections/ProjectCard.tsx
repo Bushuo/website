@@ -15,7 +15,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
     useEffect(() => {
         setImgUrl(urlFor(project.mainImage).url());
-        setDateParts(project.when.split("-").reverse().slice(0, -1));
+        setDateParts(project.when.split("-").slice(1, 3));
     }, [project]);
 
     if (!imgUrl) return null;
