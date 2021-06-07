@@ -97,10 +97,14 @@ const ProjectGroup = styled.div`
     flex-direction: column;
     article:nth-child(2n + 1) {
         align-self: flex-end;
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
     }
 
     article:nth-child(2n) {
         align-self: flex-start;
+        border-top-right-radius: 15px;
+        border-bottom-right-radius: 15px;
     }
 `;
 

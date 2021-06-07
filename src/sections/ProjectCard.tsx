@@ -46,8 +46,6 @@ const Container = styled(ImgContainer)`
     background-image: linear-gradient(#17202fbb, #17202fbb),
         url(${(props) => props.url});
     background-size: cover;
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
     height: 400px;
     width: 40%;
     color: white;
