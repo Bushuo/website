@@ -24,8 +24,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         <Container url={imgUrl}>
             <Grid>
                 <DateColumn>
-                    {dateParts.map((part) => (
-                        <Date>{part}</Date>
+                    {dateParts.map((part, i) => (
+                        <Date key={`date-${i}`}>{part}</Date>
                     ))}
                     <H3>{project.title}</H3>
                 </DateColumn>
