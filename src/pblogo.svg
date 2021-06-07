@@ -12,8 +12,8 @@
   <title>Layer 1</title>
   <defs>
    <linearGradient id="svg_15" x1="0" y1="0" x2="1" y2="0">
-    <stop stop-color="#17202f" offset="0"/>
-    <stop stop-color="#17202f" offset="1"/>
+    <stop stop-color="#eeeeee" offset="0"/>
+    <stop stop-color="#eeeeee" offset="1"/>
    </linearGradient>
   </defs>
   <g stroke="null" id="svg_27">

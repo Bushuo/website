@@ -4,6 +4,7 @@ import styled from "styled-components";
 import IProject from "../types/IProject";
 import sanityClient from "../utils/client";
 import extractYearFromDateString from "../utils/extractYearFromDateString";
+import { ReactComponent as Logo } from "../pblogo.svg";
 
 interface NavbarProps {}
 
@@ -36,7 +37,7 @@ const Navbar: React.FC<NavbarProps> = () => {
     return (
         <Header>
             <Nav>
-                <MainNavLink href="#me">Me</MainNavLink>
+                <Logo width={50} height={50} viewBox="0 0 252 252" />
                 <NavLink href="#projects">Projects</NavLink>
                 {projectYears &&
                     projectYears.map((year, index) => (
@@ -58,13 +59,6 @@ const Nav = styled.nav`
     color: white;
     display: flex;
     align-items: center;
-`;
-
-const MainNavLink = styled.a`
-    color: white;
-    text-decoration: none;
-    font-size: x-large;
-    padding: 1rem;
 `;
 
 const NavLink = styled.a`
