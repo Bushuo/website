@@ -1,27 +1,22 @@
-import BlockContent from "@sanity/block-content-to-react";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { RichText } from "@graphcms/rich-text-react-renderer";
 
-import IProject from "../types/IProject";
-import urlFor from "../utils/urlFor";
+import { GetProjectsDescQuery } from "../generated/graphql";
 
 interface ProjectCardProps {
-    project: IProject;
+    project: GetProjectsDescQuery["projects"][0];
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     const [dateParts, setDateParts] = useState<string[]>([]);
-    const [imgUrl, setImgUrl] = useState<string | null>(null);
 
     useEffect(() => {
-        setImgUrl(urlFor(project.mainImage).url());
-        setDateParts(project.when.split("-").slice(1, 3));
+        setDateParts(project.endDate.split("-").slice(1, 3));
     }, [project]);
 
-    if (!imgUrl) return null;
-
     return (
-        <Container url={imgUrl}>
+        <Container url={project.image.url}>
             <Grid>
                 <DateColumn>
                     {dateParts.map((part, i) => (
@@ -29,7 +24,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                     ))}
                     <H3>{project.title}</H3>
                 </DateColumn>
-                <Description blocks={project.description} />
+                <Description>
+                    <RichText content={project.description.json} />
+                </Description>
             </Grid>
         </Container>
     );
@@ -79,7 +76,7 @@ const Grid = styled.div`
     height: 100%;
 `;
 
-const Description = styled(BlockContent)`
+const Description = styled.div`
     display: flex;
     flex-direction: column;
     padding-left: 1rem;

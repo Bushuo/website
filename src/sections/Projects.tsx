@@ -1,45 +1,40 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import {
+    useGetProjectsDescQuery,
+    GetProjectsDescQuery,
+} from "../generated/graphql";
 
-import IProject from "../types/IProject";
-import sanityClient from "../utils/client";
 import extractYearFromDateString from "../utils/extractYearFromDateString";
 import ProjectCard from "./ProjectCard";
 
 interface ProjectsProps {}
 
 interface ProjectMap {
-    [year: string]: IProject[];
+    [year: string]: GetProjectsDescQuery["projects"];
 }
 
 const Projects: React.FC<ProjectsProps> = () => {
     const [projectMap, setProjectMap] = useState<ProjectMap | null>(null);
 
+    const { data, loading } = useGetProjectsDescQuery();
+
     useEffect(() => {
-        sanityClient
-            .fetch(
-                `*[_type == "project"] | order(when desc) {
-                    title,
-                    mainImage,
-                    when,
-                    description
-                }`
-            )
-            .then((data) => {
-                const map: ProjectMap = {};
-                (data as IProject[]).forEach((project) => {
-                    const year = extractYearFromDateString(project.when);
-                    if (year) {
-                        if (!map[year]) {
-                            map[year] = [];
-                        }
-                        map[year].push(project);
-                    }
-                });
-                setProjectMap(map);
-            })
-            .catch(console.error);
-    }, []);
+        if (!data?.projects) return;
+
+        const map: ProjectMap = {};
+        data.projects.forEach((p) => {
+            const year = extractYearFromDateString(p.endDate);
+            if (!map[year]) {
+                map[year] = [];
+            }
+            map[year].push(p);
+        });
+        setProjectMap(map);
+    }, [data, setProjectMap]);
+
+    if (!data?.projects || loading) return null;
+
     return (
         <Container>
             <H2 id="projects">Projects</H2>

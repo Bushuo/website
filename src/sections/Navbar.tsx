@@ -1,45 +1,39 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import IProject from "../types/IProject";
-import sanityClient from "../utils/client";
 import extractYearFromDateString from "../utils/extractYearFromDateString";
 import { ReactComponent as Logo } from "../pblogo.svg";
+import { useGetProjectDatesQuery } from "../generated/graphql";
 
+interface YearMap {
+    [date: string]: boolean;
+}
 interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = () => {
+    const { data, loading } = useGetProjectDatesQuery();
+
     const [projectYears, setProjectsYears] = useState<string[] | null>(null);
 
     useEffect(() => {
-        sanityClient
-            .fetch(
-                `*[_type == "project"] {
-                    when
-                }`
-            )
-            .then((data) => {
-                const years: { [key: string]: number } = {};
-                (data as IProject[]).forEach((project) => {
-                    const year = extractYearFromDateString(project.when);
-                    if (year) {
-                        years[year] = 1;
-                    }
-                });
+        if (!data?.projects) return;
 
-                setProjectsYears(
-                    Object.keys(years).sort((a, b) => Number(b) - Number(a))
-                );
-            })
-            .catch(console.error);
-    }, []);
+        const yearMap: YearMap = {};
+        data.projects.forEach((p) => {
+            yearMap[extractYearFromDateString(p.endDate)] = true;
+        });
+        setProjectsYears(
+            Object.keys(yearMap).sort((a, b) => Number(b) - Number(a))
+        );
+    }, [data, setProjectsYears]);
 
     return (
         <Header>
             <Nav>
                 <Logo width={50} height={50} viewBox="0 0 252 252" />
                 <NavLink href="#projects">Projects</NavLink>
-                {projectYears &&
+                {!loading &&
+                    projectYears &&
                     projectYears.map((year, index) => (
                         <NavLink href={`#projects-${year}`} key={index}>
                             {year}

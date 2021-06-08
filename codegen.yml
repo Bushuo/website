@@ -1,0 +1,12 @@
+overwrite: true
+schema: "https://api-eu-central-1.graphcms.com/v2/ckpo4azd71eqv01w6b00qcl42/master"
+documents: "src/graphql/**/*.graphql"
+generates:
+    src/generated/graphql.tsx:
+        plugins:
+            - "typescript":
+                  scalars:
+                      Date: "string"
+                      DateTime: "string"
+            - "typescript-operations"
+            - "typescript-react-apollo"

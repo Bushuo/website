@@ -1,0 +1,12 @@
+query getMainAuthor {
+    author(where: { id: "ckpo4t3u0nihr0a604x6hgwgd" }) {
+        name
+        image {
+            url
+        }
+        tagline
+        bio {
+            json
+        }
+    }
+}

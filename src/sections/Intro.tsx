@@ -1,73 +1,59 @@
-import BlockContent from "@sanity/block-content-to-react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { SocialIcon } from "react-social-icons";
 
-import sanityClient from "../utils/client";
-import urlFor from "../utils/urlFor";
 import ScrollDown from "../ScrollDown";
-import IAuthor from "../types/IAuthor";
+import { useGetMainAuthorQuery } from "../generated/graphql";
+import { RichText } from "@graphcms/rich-text-react-renderer";
 
 interface IntroProps {}
 
 const Intro: React.FC<IntroProps> = () => {
-    const [author, setAuthor] = useState<IAuthor | null>(null);
+    const { data, loading } = useGetMainAuthorQuery();
 
-    useEffect(() => {
-        sanityClient
-            .fetch(
-                `*[_type == "author"] [0] {
-                    name,
-                    image,
-                    tagline,
-                    bio,
-                }`
-            )
-            .then(setAuthor)
-            .catch(console.error);
-    }, []);
+    if (!data?.author || loading) return null;
 
     return (
-        author && (
-            <Section id="me">
-                <div>
-                    <AuthorImg
-                        src={urlFor(author.image).url() ?? undefined}
-                        alt="Black and white photograph of author"
+        <Section id="me">
+            <div>
+                <AuthorImg
+                    src={data.author.image.url}
+                    alt="Black and white photograph of author"
+                />
+                <IconContainer>
+                    <SocialIcon
+                        url="https://github.com/Bushuo"
+                        target="_blank"
+                        style={{
+                            width: 40,
+                            height: 40,
+                            marginLeft: 10,
+                            marginTop: 10,
+                        }}
+                        bgColor="#17202f"
                     />
-                    <IconContainer>
-                        <SocialIcon
-                            url="https://github.com/Bushuo"
-                            target="_blank"
-                            style={{
-                                width: 40,
-                                height: 40,
-                                marginLeft: 10,
-                                marginTop: 10,
-                            }}
-                            bgColor="#17202f"
-                        />
-                        <SocialIcon
-                            url="https://instagram.com/le_pole"
-                            target="_blank"
-                            style={{
-                                width: 40,
-                                height: 40,
-                                marginLeft: 10,
-                                marginTop: 10,
-                            }}
-                            bgColor="#17202f"
-                        />
-                    </IconContainer>
-                </div>
-                <TextContainer>
-                    <H1>{author.name}</H1>
-                    <H2>{author.tagline}</H2>
-                    <Bio blocks={author.bio} />
-                </TextContainer>
-                <ScrollDown />
-            </Section>
-        )
+                    <SocialIcon
+                        url="https://instagram.com/le_pole"
+                        target="_blank"
+                        style={{
+                            width: 40,
+                            height: 40,
+                            marginLeft: 10,
+                            marginTop: 10,
+                        }}
+                        bgColor="#17202f"
+                    />
+                </IconContainer>
+            </div>
+            <TextContainer>
+                <H1>{data.author.name}</H1>
+                <H2>{data.author.tagline}</H2>
+                <Bio>
+                    <RichText content={data.author.bio.json} />
+                </Bio>
+            </TextContainer>
+            <ScrollDown />
+        </Section>
     );
 };
 
@@ -103,7 +89,7 @@ const AuthorImg = styled.img`
     }
 `;
 
-const Bio = styled(BlockContent)`
+const Bio = styled.div`
     margin-top: 1rem;
     font-size: 1rem;
     max-width: 700px;

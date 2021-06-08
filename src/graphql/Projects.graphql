@@ -1,0 +1,18 @@
+query getProjectDates {
+    projects {
+        endDate
+    }
+}
+
+query getProjectsDesc {
+    projects(orderBy: endDate_DESC) {
+        endDate
+        title
+        description {
+            json
+        }
+        image {
+            url
+        }
+    }
+}

@@ -1,3 +1,4 @@
 export default function extractYearFromDateString(date: string) {
-    return date.split("-").shift();
+    const year = date.split("-").shift();
+    return year ?? "";
 }
