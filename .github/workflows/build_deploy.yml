@@ -33,7 +33,7 @@ jobs:
       uses: sebastianpopp/ftp-action@releases/v2
       with:
         host: ${{ secrets.FTP_SERVER }}
-        user: ${{ secrets.FTP_USERNAME }}
+        user: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASSWORD }}
         localDir: "build"
         remoteDir: "."
